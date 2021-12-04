@@ -2,18 +2,16 @@
 ### Time Series Prediction
 
 
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, LSTM
+from tensorflow.keras.models import Sequential ### linear stack of layers from the module tenserflow, A way of defining layer
+from tensorflow.keras.layers import Dense, LSTM # Fully connected layer
 import math
 from sklearn.metrics import mean_squared_error
-import numpy as np
-from sklearn.preprocessing import MinMaxScaler
-import matplotlib.pyplot as plt
+import numpy as np ## module for all the mathematical calulations
+from sklearn.preprocessing import MinMaxScaler  ###  Transform features by scaling each feature to a given range
+import matplotlib.pyplot as plt  ## Plotting the chart
 
-def testfunc(df,date):
-  print(123)
-  return df.Close
 
+### Section for prediction with lstm model
 class StockMarket:
   def __init__(self,dataset,timestep=10):
     self.dataset = dataset.set_index('Date')['Close']
@@ -24,7 +22,7 @@ class StockMarket:
     self.y_train_pred = None
     self.y_valid_pred = None
 
-  def normalize(self,dataset):
+  def normalize(self,dataset): ## Normalise the data between 0 to 1
     self.normalizer = MinMaxScaler()
     return self.normalizer.fit_transform(np.array(dataset).reshape(-1,1))
   
@@ -38,9 +36,9 @@ class StockMarket:
         2. Dataset: Train set size = 70%; Test set size = 30%
     '''
     self.dataset_scaled = self.normalize(self.dataset)
-    train_size = int(len(self.dataset_scaled)*0.7)
+    train_size = int(len(self.dataset_scaled)*0.7) ## Assigning the value for train and test data
     valid_size = len(self.dataset_scaled)-train_size
-    X_train, X_valid = self.dataset_scaled[:train_size],self.dataset_scaled[train_size:]
+    X_train, X_valid = self.dataset_scaled[:train_size],self.dataset_scaled[train_size:]  ## Train and test data
 
     def create_data(data, timestep=3):
       x_features, y = [],[]
@@ -94,22 +92,16 @@ class StockMarket:
     print(f'RMSE train data: {math.sqrt(mean_squared_error(y_train,self.y_train_pred))}')
     print(f'RMSE validation data: {math.sqrt(mean_squared_error(y_valid,self.y_valid_pred))}')
 
-    #graph_plot = self.plot_graph()
 
-
-    # Stock Prediction
-    #self.user_date = user_date
     self.user_date = self.dataset.index[-1]
     index = self.dataset.index.get_loc(self.user_date)
     test_data = self.dataset.iloc[index-self.timestep:index]
     test_data = self.normalizer.transform(np.array(test_data).reshape(-1,1)).reshape(1,-1)
-    #test_data = np.array(self.normalizer.transform(test_date))
-    #test_data = test_data.reshape(test_data.shape+(1,))
     temp_data = list(test_data)[0].tolist()
     lst_output=[]
     i=0
     while(i<number_of_days):
-      if(len(temp_data)>100):
+      if(len(temp_data)>100): ## Training the data from 100 back date
           test_data=np.array(temp_data[1:])
           test_data=test_data.reshape(1,-1)
           test_data = test_data.reshape((1, self.timestep, 1))
@@ -127,7 +119,7 @@ class StockMarket:
           i=i+1
         
 
-    return self.normalizer.inverse_transform(lst_output)
+    return self.normalizer.inverse_transform(lst_output),f'\t\t\t\tRMSE validation data: {math.sqrt(mean_squared_error(y_valid,self.y_valid_pred))}'
 
 
 """https://github.com/krishnaik06/Stock-MArket-Forecasting/blob/master/Untitled.ipynb"""
