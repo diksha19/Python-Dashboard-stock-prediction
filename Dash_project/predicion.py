@@ -1,9 +1,8 @@
 
 ### Time Series Prediction
 
-
-from tensorflow.keras.models import Sequential ### linear stack of layers from the module tenserflow, A way of defining layer
-from tensorflow.keras.layers import Dense, LSTM # Fully connected layer
+#from tensorflow.keras.models import Sequential ### linear stack of layers from the module tenserflow, A way of defining layer
+#from tensorflow.keras.layers import Dense, LSTM # Fully connected layer
 import math
 from sklearn.metrics import mean_squared_error
 import numpy as np ## module for all the mathematical calulations
@@ -54,12 +53,12 @@ class StockMarket:
     return X_train, y_train, X_valid, y_valid
 
   def build_model(self):
-    model = Sequential()
-    model.add(LSTM(50,return_sequences=True,input_shape=(self.timestep,1)))
-    model.add(LSTM(50,return_sequences=True))
-    model.add(LSTM(50))
-    model.add(Dense(1))
-    return model
+    #model = Sequential()
+    #model.add(LSTM(50,return_sequences=True,input_shape=(self.timestep,1)))
+    #model.add(LSTM(50,return_sequences=True))
+    #model.add(LSTM(50))
+    #model.add(Dense(1))
+    return
 
   def plot_graph(self):
     # shift train predictions for plotting
